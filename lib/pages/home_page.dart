@@ -1,4 +1,5 @@
 import 'package:calculadora_imc_flutter/models/imc_model.dart';
+import 'package:calculadora_imc_flutter/pages/lista_imc_page.dart';
 import 'package:calculadora_imc_flutter/repository/imc_repository.dart';
 import 'package:flutter/material.dart';
 
@@ -16,6 +17,13 @@ class _HomePageState extends State<HomePage> {
   final _alturaController = TextEditingController();
 
   final _listaImc = ImcRepository();
+
+  ImcModel calcularIMC() {
+    var imcCalculado = ImcModel(double.parse(_pesoController.text),
+        double.parse(_alturaController.text));
+    _listaImc.adicionaImc(imcCalculado);
+    return imcCalculado;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -65,18 +73,66 @@ class _HomePageState extends State<HomePage> {
                 ),
                 SizedBox(
                   width: 256,
-                  height: 64,
+                  height: 48,
                   child: TextButton(
                     style: TextButton.styleFrom(
                       backgroundColor: Colors.blue[400],
                       foregroundColor: Colors.black,
                     ),
                     onPressed: () {
-                      var imc = ImcModel(double.parse(_pesoController.text),
-                          double.parse(_alturaController.text));
-                      _listaImc.adicionaImc(imc);
+                      double valorImc = 0;
+                      if (_pesoController.text.isNotEmpty &&
+                          _alturaController.text.isNotEmpty) {
+                        valorImc = calcularIMC().imc;
+                      } else {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(
+                                content: Text("Informe peso e altura")));
+                        return;
+                      }
+                      showDialog(
+                        context: context,
+                        builder: (BuildContext bc) {
+                          return AlertDialog(
+                            title: const Text("IMC"),
+                            content: Text("IMC calculado: $valorImc"),
+                            actions: [
+                              TextButton(
+                                  onPressed: () {
+                                    Navigator.pop(context);
+                                  },
+                                  child: const Text("OK"))
+                            ],
+                          );
+                        },
+                      );
+                      setState(() {
+                        _pesoController.text = "";
+                        _alturaController.text = "";
+                      });
                     },
                     child: const Text("Calcular IMC"),
+                  ),
+                ),
+                const SizedBox(
+                  height: 24,
+                ),
+                SizedBox(
+                  width: 256,
+                  height: 48,
+                  child: TextButton(
+                    style: TextButton.styleFrom(
+                      backgroundColor: Colors.deepOrange[400],
+                      foregroundColor: Colors.black,
+                    ),
+                    onPressed: () {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) =>
+                                  ListaImcPage(listagemImc: _listaImc)));
+                    },
+                    child: const Text("Mostrar Lista de IMC"),
                   ),
                 ),
               ],

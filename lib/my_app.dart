@@ -1,3 +1,4 @@
+import 'package:calculadora_imc_flutter/services/info_service.dart';
 import 'package:calculadora_imc_flutter/pages/home_page.dart';
 import 'package:flutter/material.dart';
 
@@ -17,7 +18,7 @@ class _MyAppState extends State<MyApp> {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.blue),
         useMaterial3: true,
       ),
-      home: const HomePage(titulo: "Calculadora de IMC"),
+      home: const HomePage(titulo: Info.titulo),
     );
   }
 }

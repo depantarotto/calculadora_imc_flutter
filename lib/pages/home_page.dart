@@ -31,7 +31,9 @@ class _HomePageState extends State<HomePage> {
       appBar: AppBar(
         title: Text(widget.titulo),
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        leading: const Icon(Icons.calculate),
+        actions: const [
+          Icon(Icons.calculate),
+        ],
       ),
       body: SingleChildScrollView(
         child: Container(
